@@ -94,7 +94,81 @@
                         </a>
                     </li>
                     
-                    @yield('menu-items')
+                    <!-- Courriers -->
+                    <li class="menu-item {{ request()->routeIs('courriers.*') ? 'active open' : '' }}">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-envelope"></i>
+                            <div data-i18n="Courriers">Courriers</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item {{ request()->routeIs('courriers.entrants.*') ? 'active' : '' }}">
+                                <a href="{{ route('courriers.entrants.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-down-arrow-circle"></i>
+                                    <div data-i18n="Entrants">Courriers Entrants</div>
+                                </a>
+                            </li>
+                            <li class="menu-item {{ request()->routeIs('courriers.sortants.*') ? 'active' : '' }}">
+                                <a href="{{ route('courriers.sortants.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-up-arrow-circle"></i>
+                                    <div data-i18n="Sortants">Courriers Sortants</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Recherche -->
+                    <li class="menu-item {{ request()->routeIs('recherche.*') ? 'active' : '' }}">
+                        <a href="{{ route('recherche.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-search"></i>
+                            <div data-i18n="Recherche">Recherche Avancée</div>
+                        </a>
+                    </li>
+
+                    <!-- Administration -->
+                    @if(auth()->user()->isAdmin() || auth()->user()->isDirecteur())
+                    <li class="menu-item {{ request()->routeIs('directions.*') || request()->routeIs('services.*') || request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'active open' : '' }}">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-cog"></i>
+                            <div data-i18n="Administration">Administration</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @can('viewAny', App\Models\Direction::class)
+                            <li class="menu-item {{ request()->routeIs('directions.*') ? 'active' : '' }}">
+                                <a href="{{ route('directions.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-building"></i>
+                                    <div data-i18n="Directions">Directions</div>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('viewAny', App\Models\Service::class)
+                            <li class="menu-item {{ request()->routeIs('services.*') ? 'active' : '' }}">
+                                <a href="{{ route('services.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-group"></i>
+                                    <div data-i18n="Services">Services</div>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('viewAny', App\Models\User::class)
+                            <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                                <a href="{{ route('users.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-user"></i>
+                                    <div data-i18n="Utilisateurs">Utilisateurs</div>
+                                </a>
+                            </li>
+                            @endcan
+                            @if(auth()->user()->isAdmin())
+                            <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                                <a href="{{ route('roles.index') }}" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-shield"></i>
+                                    <div data-i18n="Rôles & Permissions">Rôles & Permissions</div>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
+                    
+                    @stack('menu-items')
                 </ul>
             </aside>
             <!-- / Menu -->
